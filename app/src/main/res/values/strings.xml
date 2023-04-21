@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">To Do List</string>
+    <string name="greet">What\'s up</string>
+    <string name="todaysTask">Today\'s Task</string>
+    <string name="Etext">Enter your task</string>
+    <string name="add">ADD</string>
+    <string name="btn2">Delete</string>
+    <string name="home">Home</string>
+    <string name="completed">Completed</string>
+    <string name="remainder">Remainder</string>
+    <string name="progress">Progress</string>
+
+</resources>
