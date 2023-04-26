@@ -1,13 +1,16 @@
 <resources>
-    <string name="app_name">To Do List</string>
+    <string name="app_name">Task Master</string>
     <string name="greet">What\'s up</string>
-    <string name="todaysTask">Today\'s Task</string>
-    <string name="Etext">Enter your task</string>
+    <string name="todaysTask">All Task</string>
+    <string name="Task">Task</string>
+    <string name="addTask">ADD TASK</string>
+    <string name="Etask">Enter your task</string>
+    <string name="tdate">Select Date</string>
+    <string name="ttime">Select Time</string>
     <string name="add">ADD</string>
-    <string name="btn2">Delete</string>
-    <string name="home">Home</string>
     <string name="completed">Completed</string>
-    <string name="remainder">Remainder</string>
-    <string name="progress">Progress</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="nolistpresent">No Task Added</string>
 
 </resources>

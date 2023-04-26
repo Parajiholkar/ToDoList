@@ -2,21 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/home"
         android:icon="@drawable/baseline_home_24"
-        android:title="@string/home"/>
+        android:title="@string/completed"/>
 
     <item android:id="@+id/search"
         android:icon="@drawable/baseline_alarm_24"
-        android:title="@string/remainder"/>
-
-    <item android:id="@+id/placeHolder"
-        android:title=""/>
+        android:title="@string/update"/>
 
     <item android:id="@+id/card"
         android:icon="@drawable/baseline_done_all_24"
-        android:title="@string/completed"/>
-
-    <item android:id="@+id/progress"
-        android:icon="@drawable/baseline_self_improvement_24"
-        android:title="@string/progress"/>
+        android:title="@string/delete"/>
 
 </menu>
