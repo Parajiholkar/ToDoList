@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Button addbtn ;
     String Rtaskstr,Rdate,Rtime ;
     EditText task;
-    TextView Edate,Etime ,nolistpresent ;
+    TextView Edate,Etime ;
     int year,month,day, hour,minute ;
 
     @Override
@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleview) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fab = findViewById(R.id.fab);
-        nolistpresent = findViewById(R.id.nolistpresent);
         addbtn = dialog.findViewById(R.id.addbtn) ;
         task = dialog.findViewById(R.id.edttask) ;
         Edate = dialog.findViewById(R.id.tdate);

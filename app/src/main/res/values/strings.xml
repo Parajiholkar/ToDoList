@@ -10,7 +10,8 @@
     <string name="add">ADD</string>
     <string name="completed">Completed</string>
     <string name="update">Update</string>
+    <string name="UPDATE">UPDATE</string>
     <string name="delete">Delete</string>
-    <string name="nolistpresent">No Task Added</string>
+    <string name="update_task">UPDATE TASK</string>
 
 </resources>

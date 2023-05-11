@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/home"
-        android:icon="@drawable/baseline_home_24"
-        android:title="@string/completed"/>
 
     <item android:id="@+id/search"
         android:icon="@drawable/baseline_alarm_24"
-        android:title="@string/update"/>
+        android:title="@string/delete"/>
 
     <item android:id="@+id/card"
         android:icon="@drawable/baseline_done_all_24"
-        android:title="@string/delete"/>
+        android:title="@string/completed"/>
+
+    <item android:id="@+id/progress"
+        android:icon="@drawable/baseline_self_improvement_24"
+        android:title="@string/update"/>
 
 </menu>
