@@ -45,18 +45,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginVertical="3dp"
-                android:elevation="70dp"
-                android:paddingLeft="15dp"
-                app:cardCornerRadius="15dp">
-
+                app:cardCornerRadius="15dp"
+            app:cardBackgroundColor="@color/cardColor">
                 <TextView
                     android:id="@+id/textv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:paddingVertical="15dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
+                    android:paddingVertical="20dp"
+                    android:paddingHorizontal="20dp"
                     android:text="@string/greet"
                     android:textSize="34sp"
                     android:textStyle="bold" />
