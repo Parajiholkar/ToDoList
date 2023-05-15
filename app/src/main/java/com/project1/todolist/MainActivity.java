@@ -1,14 +1,24 @@
 package com.project1.todolist;
 
 
+import static android.os.Build.*;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -33,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
     Button addbtn ;
     String Rtaskstr,Rdate,Rtime ;
     EditText task;
-    TextView Edate,Etime ;
+    TextView Edate,Etime, notaskadded ;
     int year,month,day, hour,minute ;
+    Calendar Rcalender ;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +57,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleview) ;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         fab = findViewById(R.id.fab);
+        notaskadded = findViewById(R.id.notaskadded);
         addbtn = dialog.findViewById(R.id.addbtn) ;
         task = dialog.findViewById(R.id.edttask) ;
         Edate = dialog.findViewById(R.id.tdate);
         Etime = dialog.findViewById(R.id.ttime);
         Calendar calendar = Calendar.getInstance();
+        Rcalender = Calendar.getInstance();
+        // to Create Notification Channel
+        createnotificationchannel();
+//        if(array.size()==0){
+//            notaskadded.setVisibility(View.VISIBLE);
+//        }else {
+//            notaskadded.setVisibility(View.INVISIBLE);
+//        }
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,11 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar dcalender = Calendar.getInstance();
-                        dcalender.set(Calendar.YEAR,year);
-                        dcalender.set(Calendar.MONTH,month);
-                        dcalender.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-                        Edate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(dcalender.getTime()));
+                        Rcalender.set(Calendar.YEAR,year);
+                        Rcalender.set(Calendar.MONTH,month);
+                        Rcalender.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        Edate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(Rcalender.getTime()));
                     }
                 },year,month,day);
                 datePickerDialog.show();
@@ -86,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Rcalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                        Rcalender.set(Calendar.MINUTE,minute);
                         if(hourOfDay<10 || minute<10){
                             if(hourOfDay<10 && minute<10){
                                 Etime.setText("0"+hourOfDay+":"+"0"+minute);
@@ -117,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
                             array.add(new RecycleViewModule(Rtaskstr,Rdate,Rtime));
                             Adapter adapter1 = new Adapter(MainActivity.this,array);
                             recyclerView.setAdapter(adapter1);
+                            ReminderManager reminderManager = new ReminderManager(MainActivity.this);
+                            reminderManager.setTaskReminder(Rtaskstr,Rtime+", "+Rdate,Rcalender.getTimeInMillis());
+                            Toast.makeText(MainActivity.this, "Task Reminder is set", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             Toast.makeText(MainActivity.this, "Please Select Date!", Toast.LENGTH_SHORT).show();
@@ -131,5 +157,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    private void createnotificationchannel() {
+
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            CharSequence name = "taskReminderChannel";
+            String discription = "Channel for Task Reminder";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel("taskAlarm",name,importance);
+            notificationChannel.setDescription(discription);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
     }
 }

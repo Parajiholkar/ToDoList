@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Task Master</string>
     <string name="greet">What\'s up</string>
-    <string name="todaysTask">All Task</string>
+    <string name="todaysTask">Recent Task</string>
     <string name="Task">Task</string>
     <string name="addTask">ADD TASK</string>
     <string name="Etask">Enter your task</string>
