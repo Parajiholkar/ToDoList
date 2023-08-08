@@ -13,5 +13,7 @@
     <string name="UPDATE">UPDATE</string>
     <string name="delete">Delete</string>
     <string name="update_task">UPDATE TASK</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
 
 </resources>

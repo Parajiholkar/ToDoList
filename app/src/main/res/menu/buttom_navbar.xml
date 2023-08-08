@@ -10,7 +10,7 @@
         android:title="@string/completed"/>
 
     <item android:id="@+id/progress"
-        android:icon="@drawable/baseline_self_improvement_24"
+        android:icon="@drawable/img"
         android:title="@string/update"/>
 
 </menu>

@@ -1,6 +1,7 @@
 package com.project1.todolist;
 
-import static android.app.DatePickerDialog.*;
+import static android.app.DatePickerDialog.OnClickListener;
+import static android.app.DatePickerDialog.OnDateSetListener;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -8,6 +9,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -55,7 +59,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                 LinearLayout update, delete ,complete;
                 Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.rv_itemtab);
-                dialog.show();
+                try{
+                    dialog.show();
+                }catch (Exception e){
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 update = dialog.findViewById(R.id.update);
                 delete = dialog.findViewById(R.id.delete);
                 complete = dialog.findViewById(R.id.completed);
@@ -78,7 +86,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                 .setPositiveButton("Yes", new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        SharedPreferences pref = context.getSharedPreferences("taskList", context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+
+
+                                        Gson gson = new Gson();
                                         array.remove(holder.getAdapterPosition());
+
+                                        String arraystr = gson.toJson(array);
+                                        editor.putString("arraylist",arraystr);
+                                        editor.apply();
                                         notifyItemChanged(holder.getAdapterPosition());
                                         Toast.makeText(context, "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
                                     }
@@ -108,7 +125,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                 .setPositiveButton("Yes", new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        SharedPreferences pref = context.getSharedPreferences("taskList", context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+
+
+                                        Gson gson = new Gson();
                                         array.remove(holder.getAdapterPosition());
+
+                                        String arraystr = gson.toJson(array);
+                                        editor.putString("arraylist",arraystr);
+                                        editor.apply();
                                         notifyItemChanged(holder.getAdapterPosition());
                                         Toast.makeText(context, "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
                                     }
@@ -224,7 +250,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                             task.getText().clear();
                             date.setText(R.string.tdate);
                             time.setText(R.string.ttime);
+                            SharedPreferences pref = context.getSharedPreferences("taskList",context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+
+
+                            Gson gson = new Gson();
                             array.set(position,new RecycleViewModule(taskstr,Date,Time));
+
+                            String arraystr = gson.toJson(array);
+                            editor.putString("arraylist",arraystr);
+                            editor.apply();
                             dialog.dismiss();
                             notifyItemChanged(position);
                             Toast.makeText(context, "Task Update Successfully", Toast.LENGTH_SHORT).show();

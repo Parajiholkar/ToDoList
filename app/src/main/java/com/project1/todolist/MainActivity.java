@@ -1,24 +1,17 @@
 package com.project1.todolist;
 
 
-import static android.os.Build.*;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static android.os.Build.VERSION;
+import static android.os.Build.VERSION_CODES;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,11 +20,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.timepicker.TimeFormat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Objects;
@@ -64,13 +63,14 @@ public class MainActivity extends AppCompatActivity {
         Etime = dialog.findViewById(R.id.ttime);
         Calendar calendar = Calendar.getInstance();
         Rcalender = Calendar.getInstance();
+        try {
+            loaddata();
+        }catch (Exception e){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
         // to Create Notification Channel
         createnotificationchannel();
-//        if(array.size()==0){
-//            notaskadded.setVisibility(View.VISIBLE);
-//        }else {
-//            notaskadded.setVisibility(View.INVISIBLE);
-//        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,21 +128,24 @@ public class MainActivity extends AppCompatActivity {
         addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Rtaskstr = task.getText().toString() ;
-                Rtime = Etime.getText().toString();
-                Rdate = Edate.getText().toString();
+                int size;
+                Rtaskstr = task.getText().toString().trim() ;
+                Rtime = Etime.getText().toString().trim();
+                Rdate = Edate.getText().toString().trim();
                 if(!Objects.equals(Rtaskstr, "")) {
                     if (!Objects.equals(Rtime, "Select Time")) {
                         if (!Rdate.equals("Select Date")) {
                             task.getText().clear();
                             Edate.setText(R.string.tdate);
                             Etime.setText(R.string.ttime);
-                            array.add(new RecycleViewModule(Rtaskstr,Rdate,Rtime));
-                            Adapter adapter1 = new Adapter(MainActivity.this,array);
-                            recyclerView.setAdapter(adapter1);
-                            ReminderManager reminderManager = new ReminderManager(MainActivity.this);
-                            reminderManager.setTaskReminder(Rtaskstr,Rtime+", "+Rdate,Rcalender.getTimeInMillis());
-                            Toast.makeText(MainActivity.this, "Task Reminder is set", Toast.LENGTH_SHORT).show();
+                            try {
+                                savedata(Rtaskstr,Rdate,Rtime) ;
+                                ReminderManager reminderManager = new ReminderManager(MainActivity.this);
+                                reminderManager.setTaskReminder(Rtaskstr,Rtime+", "+Rdate,Rcalender.getTimeInMillis());
+                                Toast.makeText(MainActivity.this, "Task Reminder is set", Toast.LENGTH_SHORT).show();
+                            }catch (Exception e){
+                                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else {
                             Toast.makeText(MainActivity.this, "Please Select Date!", Toast.LENGTH_SHORT).show();
@@ -157,6 +160,40 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void loaddata(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("taskList",MODE_PRIVATE);
+        Gson gson = new Gson();
+        String arraystr = pref.getString("arraylist",null);
+        Type type = new TypeToken<ArrayList<RecycleViewModule>>(){}.getType();
+
+        ArrayList<RecycleViewModule> arraylist1 = gson.fromJson(arraystr,type);
+
+        if(arraylist1==null){
+            notaskadded.setVisibility(View.VISIBLE);
+        }else {
+            notaskadded.setVisibility(View.GONE);
+            array = arraylist1 ;
+            Adapter adapter1 = new Adapter(MainActivity.this,array);
+            recyclerView.setAdapter(adapter1);
+        }
+    }
+
+    public void savedata(String rtaskstr, String rdate, String rtime) {
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("taskList",MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+
+        Gson gson = new Gson();
+        array.add(new RecycleViewModule(rtaskstr,rdate,rtime));
+
+        String arraystr = gson.toJson(array);
+        editor.putString("arraylist",arraystr);
+        editor.apply();
+        loaddata();
+
     }
 
 
