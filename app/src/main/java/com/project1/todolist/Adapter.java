@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -142,6 +143,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                 .setNegativeButton("No", new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        holder.completeimg.setVisibility(View.VISIBLE);
 
                                     }
                                 });
@@ -166,12 +168,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
     public class viewHolder extends RecyclerView.ViewHolder {
         TextView task , ttime , tdate ;
         LinearLayout linearLayout;
+        ImageView completeimg ;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             this.task = itemView.findViewById(R.id.tasktext);
             this.tdate = itemView.findViewById(R.id.dateText);
             this.ttime = itemView.findViewById(R.id.TimeText);
             this.linearLayout = itemView.findViewById(R.id.llv);
+            this.completeimg = itemView.findViewById(R.id.completeimg);
         }
     }
     public void update(Context context,View v, int position){
@@ -203,7 +207,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                         calendar1.set(Calendar.YEAR,year);
                         calendar1.set(Calendar.MONTH,month);
                         calendar1.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-                        date.setText(DateFormat.getDateInstance(DateFormat.FULL).format(calendar1.getTime()));
+                        date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar1.getTime()));
                     }
                 },year,month,day);
                 datePickerDialog.show();

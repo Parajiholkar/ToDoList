@@ -3,5 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <drawable name="listview">@drawable/bg</drawable>
-    <color name="cardColor">#80FFD93D</color>
+    <color name="cardColor">#2EFFFFFF</color>
 </resources>

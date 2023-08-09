@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         Rcalender.set(Calendar.YEAR,year);
                         Rcalender.set(Calendar.MONTH,month);
                         Rcalender.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-                        Edate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(Rcalender.getTime()));
+                        Edate.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(Rcalender.getTime()));
                     }
                 },year,month,day);
                 datePickerDialog.show();
