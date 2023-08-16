@@ -1,13 +1,25 @@
 
-# Task-Master - An Android app
+# Task Master - Task Reminder App
+
+Task Master is a user-friendly Android app designed to help you stay organized and manage your tasks effectively. With features like setting reminders, adding tasks, updating task details, and deleting tasks, Task Master ensures that you never miss a deadline or forget an important task.
 
 
-<h4>Task Master is an Android app project that helps users manage their tasks effectively and stay organized. It offers a user-friendly interface with features like task creation, updates, deletion and reminders. Users can easily add, update, and delete tasks, set reminders for important deadlines. Task Master aims to simplify task management, enhance productivity, and provide a seamless user experience.</h4>
+## Key Features
 
-features :
- 1) Add task, update task, delete task
- 2) set remainder
+- **Set Reminder:** Easily set reminders for your tasks to receive timely notifications and stay on top of your to-do list.
 
+- **Add Task:** Quickly add new tasks by providing a title, description, and optional due date.
+
+- **Update Task:** Edit and update task details such as title, and due date.
+
+- **Delete Task:** Remove tasks that are no longer relevant or necessary.
+
+
+## Tools & Technology
+
+**Java:** The programming language used for developing the Android application
+
+**Android Studio:** The official IDE for Android app development.
 
 
 
