@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 public class ReminderManager {
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
@@ -25,4 +27,6 @@ public class ReminderManager {
         alarmIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTimeMillis, alarmIntent);
     }
+
+
 }

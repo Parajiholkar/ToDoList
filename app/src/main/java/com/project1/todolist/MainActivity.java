@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,8 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.project1.todolist.recycleview.Adapter;
+import com.project1.todolist.recycleview.RecycleViewModule;
+import com.project1.todolist.recycleview.WrapContentLinearLayoutManager;
 
 import java.lang.reflect.Type;
 import java.text.DateFormat;
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Button addbtn ;
     String Rtaskstr,Rdate,Rtime ;
     EditText task;
+    CheckBox checkBox ;
     TextView Edate,Etime, notaskadded ;
     int year,month,day, hour,minute ;
     Calendar Rcalender ;
@@ -54,13 +60,14 @@ public class MainActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this) ; //dialog
         dialog.setContentView(R.layout.custom_dialogbox);
         recyclerView = findViewById(R.id.recycleview) ;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         fab = findViewById(R.id.fab);
         notaskadded = findViewById(R.id.notaskadded);
         addbtn = dialog.findViewById(R.id.addbtn) ;
         task = dialog.findViewById(R.id.edttask) ;
         Edate = dialog.findViewById(R.id.tdate);
         Etime = dialog.findViewById(R.id.ttime);
+        checkBox = dialog.findViewById(R.id.checkbox);
         Calendar calendar = Calendar.getInstance();
         Rcalender = Calendar.getInstance();
         try {
@@ -109,17 +116,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Rcalender.set(Calendar.HOUR_OF_DAY,hourOfDay);
                         Rcalender.set(Calendar.MINUTE,minute);
-                        if(hourOfDay<10 || minute<10){
-                            if(hourOfDay<10 && minute<10){
-                                Etime.setText("0"+hourOfDay+":"+"0"+minute);
-                            } else if (minute<10) {
-                                Etime.setText(hourOfDay+":"+"0"+minute);
-                            }else {
-                                Etime.setText("0"+hourOfDay+":"+minute);
-                            }
-                        }else {
-                            Etime.setText(hourOfDay+":"+minute);
-                        }
+                        Etime.setText(DateFormat.getTimeInstance().format(Rcalender.getTime()));
+//
                     }
                 },hour, minute,false);
                 timePickerDialog.show();
@@ -139,10 +137,12 @@ public class MainActivity extends AppCompatActivity {
                             Edate.setText(R.string.tdate);
                             Etime.setText(R.string.ttime);
                             try {
+                                if(checkBox.isChecked()){
+                                    ReminderManager reminderManager = new ReminderManager(MainActivity.this);
+                                    reminderManager.setTaskReminder(Rtaskstr,Rtime+", "+Rdate,Rcalender.getTimeInMillis());
+                                    Toast.makeText(MainActivity.this, "Reminder is set at "+ DateFormat.getDateTimeInstance(DateFormat.MEDIUM, TimeFormat.CLOCK_12H).format(Rcalender.getTime()), Toast.LENGTH_SHORT).show();
+                                }
                                 savedata(Rtaskstr,Rdate,Rtime) ;
-                                ReminderManager reminderManager = new ReminderManager(MainActivity.this);
-                                reminderManager.setTaskReminder(Rtaskstr,Rtime+", "+Rdate,Rcalender.getTimeInMillis());
-                                Toast.makeText(MainActivity.this, "Task Reminder is set", Toast.LENGTH_SHORT).show();
                             }catch (Exception e){
                                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Gson gson = new Gson();
-        array.add(new RecycleViewModule(rtaskstr,rdate,rtime));
+        array.add(0,new RecycleViewModule(rtaskstr,rdate,rtime));
 
         String arraystr = gson.toJson(array);
         editor.putString("arraylist",arraystr);
@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         loaddata();
 
     }
+
 
 
     private void createnotificationchannel() {

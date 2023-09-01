@@ -1,4 +1,4 @@
-package com.project1.todolist;
+package com.project1.todolist.recycleview;
 
 import static android.app.DatePickerDialog.OnClickListener;
 import static android.app.DatePickerDialog.OnDateSetListener;
@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.project1.todolist.R;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -53,6 +54,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
         holder.task.setText(array.get(position).Task);
         holder.tdate.setText(array.get(position).date);
         holder.ttime.setText(array.get(position).time);
+        if(array.get(position).isComplete()){
+            holder.completeimg.setVisibility(View.VISIBLE);
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,18 +91,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                 .setPositiveButton("Yes", new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        SharedPreferences pref = context.getSharedPreferences("taskList", context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = pref.edit();
+                                        try {
+                                            SharedPreferences pref = context.getSharedPreferences("taskList", context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = pref.edit();
 
 
-                                        Gson gson = new Gson();
-                                        array.remove(holder.getAdapterPosition());
+                                            Gson gson = new Gson();
+                                            array.remove(holder.getAdapterPosition());
 
-                                        String arraystr = gson.toJson(array);
-                                        editor.putString("arraylist",arraystr);
-                                        editor.apply();
+                                            String arraystr1 = gson.toJson(array);
+                                            editor.putString("arraylist", arraystr1);
+                                            editor.apply();
+                                            Toast.makeText(context, "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
+
+                                        }catch (Exception e){
+                                            Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
                                         notifyItemChanged(holder.getAdapterPosition());
-                                        Toast.makeText(context, "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .setNegativeButton("No", new OnClickListener() {
@@ -133,8 +142,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                         Gson gson = new Gson();
                                         array.remove(holder.getAdapterPosition());
 
-                                        String arraystr = gson.toJson(array);
-                                        editor.putString("arraylist",arraystr);
+                                        String arraystr2 = gson.toJson(array);
+                                        editor.putString("arraylist",arraystr2);
                                         editor.apply();
                                         notifyItemChanged(holder.getAdapterPosition());
                                         Toast.makeText(context, "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
@@ -143,6 +152,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                                 .setNegativeButton("No", new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        SharedPreferences pref = context.getSharedPreferences("taskList", context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+
+                                        Gson gson = new Gson();
+                                        array.get(holder.getAdapterPosition()).setComplete(true);
+                                        String arraystr3 = gson.toJson(array);
+                                        editor.putString("arraylist",arraystr3);
+                                        editor.apply();
                                         holder.completeimg.setVisibility(View.VISIBLE);
 
                                     }
@@ -181,6 +198,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
     public void update(Context context,View v, int position){
         Dialog dialog = new Dialog(context);
         Calendar calendar = Calendar.getInstance();
+        Calendar calendar1 = Calendar.getInstance();
         dialog.setContentView(R.layout.custom_dialogbox);
         EditText task = dialog.findViewById(R.id.edttask);
         TextView date = dialog.findViewById(R.id.tdate);
@@ -203,7 +221,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, new OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        Calendar calendar1 = Calendar.getInstance();
                         calendar1.set(Calendar.YEAR,year);
                         calendar1.set(Calendar.MONTH,month);
                         calendar1.set(Calendar.DAY_OF_MONTH,dayOfMonth);
@@ -224,17 +241,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if(hourOfDay<10 || minute<10){
-                            if(hourOfDay<10 && minute<10){
-                                time.setText("0"+hourOfDay+":"+"0"+minute);
-                            } else if (minute<10) {
-                                time.setText(hourOfDay+":"+"0"+minute);
-                            }else {
-                                time.setText("0"+hourOfDay+":"+minute);
-                            }
-                        }else {
-                            time.setText(hourOfDay+":"+minute);
-                        }
+                        calendar1.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                        calendar1.set(Calendar.MINUTE,minute);
+                        time.setText(DateFormat.getTimeInstance().format(calendar1.getTime()));
                     }
                 },hour, minute,false);
                 timePickerDialog.show();
@@ -257,12 +266,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.viewHolder> {
                             SharedPreferences pref = context.getSharedPreferences("taskList",context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = pref.edit();
 
-
                             Gson gson = new Gson();
                             array.set(position,new RecycleViewModule(taskstr,Date,Time));
 
-                            String arraystr = gson.toJson(array);
-                            editor.putString("arraylist",arraystr);
+                            String arraystr4 = gson.toJson(array);
+                            editor.putString("arraylist",arraystr4);
                             editor.apply();
                             dialog.dismiss();
                             notifyItemChanged(position);
